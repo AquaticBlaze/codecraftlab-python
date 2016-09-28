@@ -5,9 +5,9 @@ from pygame.locals import *
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        self.surf = pygame.Surface((75, 75))
-        self.surf.fill((255, 255, 255))
-        self.rect = self.surf.get_rect()
+        self.image = pygame.image.load('person.png').convert()
+        self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.image.get_rect()
 
     def update(self, pressed_keys):
         if pressed_keys[K_UP]:
@@ -31,9 +31,9 @@ class Player(pygame.sprite.Sprite):
 class Opponent(pygame.sprite.Sprite):
     def __init__(self):
         super(Opponent, self).__init__()
-        self.surf = pygame.Surface((20, 10))
-        self.surf.fill((255, 255, 255))
-        self.rect = self.surf.get_rect(center=(820, random.randint(0, 600)))
+        self.image = pygame.image.load('enemy.png').convert()
+        self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.image.get_rect(center=(1300, random.randint(0, 1024)))
         self.speed = random.randint(0, 2)
 
     def update(self):
@@ -58,7 +58,10 @@ pygame.time.set_timer(ADDOPPONENT, 250)
 #rect = surf.get_rect()
 
 running = True
+clock = pygame.time.Clock()
+fps = 1000
 while running:
+    clock.tick(fps)
     for event in pygame.event.get():
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
@@ -76,7 +79,9 @@ while running:
     opponents.update()
     
     for entity in all_sprites:
-        screen.blit(entity.surf, entity.rect)
+        screen.blit(entity.image, entity.rect)
+    if pygame.sprite.spritecollideany(player, opponents):
+        player.kill()
     pygame.display.flip()
 
 
