@@ -42,12 +42,12 @@ class Opponent(pygame.sprite.Sprite):
             self.kill()
             
 class Square(pygame.sprite.Sprite):
-    def __init__(Opponent, self):
-        super(self).__init__()
+    def __init__(self):
+        super(Square, self).__init__()
         self.image = pygame.image.load('square.png').convert()
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(center=(1500, random.randint(0, 1024)))
-        self.speed = random.randint(0, 2)
+        self.speed = random.randint(5, 8)
 
     def update(self):
         self.rect.move_ip(-self.speed, 0)
@@ -65,9 +65,9 @@ opponents = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
 ADDOPPONENT = pygame.USEREVENT + 1
-#ADDSQUARE = pygame.USEREVENT + 1
+ADDSQUARE = pygame.USEREVENT + 2
 pygame.time.set_timer(ADDOPPONENT, 600)
-#pygame.time.set_timer(ADDSQUARE,600)
+pygame.time.set_timer(ADDSQUARE,1000)
 #surf = pygame.Surface((75, 75))
 #surf.fill((255, 255, 255))
 #rect = surf.get_rect()
@@ -87,14 +87,15 @@ while running:
             new_opponent = Opponent()
             opponents.add(new_opponent)
             all_sprites.add(new_opponent)
-        #elif(event.type == ADDSQUARE):
-            #new_square = Square()
-            #opponents.add(new_square)
-            #all_sprites.add(new_square)
+        elif(event.type == ADDSQUARE):
+            new_square = Square()
+            opponents.add(new_square)
+            all_sprites.add(new_square)
     screen.blit(background, (0, 0))
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys)
     opponents.update()
+    
     
     for entity in all_sprites:
         screen.blit(entity.image, entity.rect)
