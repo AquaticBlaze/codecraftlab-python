@@ -5,7 +5,7 @@ from pygame.locals import *
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        self.image = pygame.image.load('person.png').convert()
+        self.image = pygame.image.load('Circle.png').convert()
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect()
 
@@ -31,28 +31,43 @@ class Player(pygame.sprite.Sprite):
 class Opponent(pygame.sprite.Sprite):
     def __init__(self):
         super(Opponent, self).__init__()
-        self.image = pygame.image.load('enemy.png').convert()
+        self.image = pygame.image.load('triangle.png').convert()
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
-        self.rect = self.image.get_rect(center=(1300, random.randint(0, 1024)))
+        self.rect = self.image.get_rect(center=(1500, random.randint(0, 1024)))
         self.speed = random.randint(0, 2)
 
     def update(self):
         self.rect.move_ip(-self.speed, 0)
         if self.rect.right < 0:
             self.kill()
-        
-        
+            
+class Square(pygame.sprite.Sprite):
+    def __init__(Opponent, self):
+        super(self).__init__()
+        self.image = pygame.image.load('square.png').convert()
+        self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.image.get_rect(center=(1500, random.randint(0, 1024)))
+        self.speed = random.randint(0, 2)
+
+    def update(self):
+        self.rect.move_ip(-self.speed, 0)
+        if self.rect.right < 0:
+            self.kill()
+
+             
 pygame.init()
 screen = pygame.display.set_mode((1280, 1024))
 player = Player()
 background = pygame.Surface(screen.get_size())
-background.fill((0, 0, 0))
+background.fill((18, 214, 159))
 players = pygame.sprite.Group()
 opponents = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
 ADDOPPONENT = pygame.USEREVENT + 1
-pygame.time.set_timer(ADDOPPONENT, 250)
+#ADDSQUARE = pygame.USEREVENT + 1
+pygame.time.set_timer(ADDOPPONENT, 600)
+#pygame.time.set_timer(ADDSQUARE,600)
 #surf = pygame.Surface((75, 75))
 #surf.fill((255, 255, 255))
 #rect = surf.get_rect()
@@ -72,7 +87,10 @@ while running:
             new_opponent = Opponent()
             opponents.add(new_opponent)
             all_sprites.add(new_opponent)
-
+        #elif(event.type == ADDSQUARE):
+            #new_square = Square()
+            #opponents.add(new_square)
+            #all_sprites.add(new_square)
     screen.blit(background, (0, 0))
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys)
