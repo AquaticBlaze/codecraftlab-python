@@ -47,7 +47,7 @@ class Square(pygame.sprite.Sprite):
         self.image = pygame.image.load('square.png').convert()
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(center=(1500, random.randint(0, 1024)))
-        self.speed = random.randint(8, 10)
+        self.speed = random.randint(15, 20)
 
     def update(self):
         self.rect.move_ip(-self.speed, 0)
@@ -67,6 +67,19 @@ class Pentagon(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
+class Hexagon(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Hexagon, self).__init__()
+        self.image = pygame.image.load('1d19wa.gif').convert()
+        self.image.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.image.get_rect(center=(1500, random.randint(0, 1024)))
+        self.speed = random.randint(1, 2)
+
+    def update(self):
+        self.rect.move_ip(-self.speed, 0)
+        if self.rect.right < 0:
+            self.kill()
+
              
 pygame.init()
 screen = pygame.display.set_mode((1280, 1024))
@@ -80,9 +93,11 @@ all_sprites.add(player)
 ADDOPPONENT = pygame.USEREVENT + 1
 ADDSQUARE = pygame.USEREVENT + 2
 ADDPENTAGON = pygame.USEREVENT + 3
+ADDHEXAGON = pygame.USEREVENT + 4
 pygame.time.set_timer(ADDOPPONENT, 600)
-pygame.time.set_timer(ADDSQUARE,2000)
+pygame.time.set_timer(ADDSQUARE,10000)
 pygame.time.set_timer(ADDPENTAGON,3000)
+pygame.time.set_timer(ADDHEXAGON,3000)
 #surf = pygame.Surface((75, 75))
 #surf.fill((255, 255, 255))
 #rect = surf.get_rect()
@@ -93,6 +108,7 @@ fps = 1000
 playerkill = False
 gamestart = False
 start_ticks = 0
+lives = 10
 print 'Press space to start!'
 while running:
     clock.tick(fps)
@@ -124,6 +140,10 @@ while running:
             new_pentagon = Pentagon(player.rect)
             opponents.add(new_pentagon)
             all_sprites.add(new_pentagon)
+        elif(event.type == ADDHEXAGON):
+            new_hexagon = Hexagon()
+            opponents.add(new_hexagon)
+            all_sprites.add(new_hexagon)
     screen.blit(background, (0, 0))
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys)
@@ -132,10 +152,15 @@ while running:
         
     for entity in all_sprites:
         screen.blit(entity.image, entity.rect)
-    if not playerkill and pygame.sprite.spritecollideany(player, opponents):
-        playerkill = True
-        player.kill()
-        print ('You survived ' + str(seconds) + ' seconds!')
+
+    spr = pygame.sprite.spritecollideany(player, opponents)
+    if not playerkill and spr:
+        spr.kill()
+        lives = lives-1
+        if lives == 0:
+            playerkill = True
+            player.kill()
+            print ('You survived ' + str(seconds) + ' seconds!')
     pygame.display.flip()
 
 
