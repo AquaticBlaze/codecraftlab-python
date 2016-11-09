@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 from pygame.locals import *
 
 class Player(pygame.sprite.Sprite):
@@ -70,18 +71,33 @@ class Pentagon(pygame.sprite.Sprite):
 class Hexagon(pygame.sprite.Sprite):
     def __init__(self):
         super(Hexagon, self).__init__()
-        self.image = pygame.image.load('1d19wa.gif').convert()
+        self.images = []
+        self.images.append(pygame.image.load('Hexagon.png'))
+        self.images.append(pygame.image.load('Hexagon2.png'))
+        self.index = 0
+        self.image = self.images[self.index]
         self.image.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.image.get_rect(center=(1500, random.randint(0, 1024)))
         self.speed = random.randint(1, 2)
-
+        self.last = pygame.time.get_ticks()
+        self.image = self.images[self.index]
+        self.cooldown = 1000
     def update(self):
+        self.index += 1
+        if self.index >= len(self.images):
+            self.index = 0
+        now = pygame.time.get_ticks()
+        if now - self.last >= self.cooldown:
+            self.image = self.images[self.index]
+            self.image.set_colorkey((255, 255, 255), RLEACCEL)
+            self.last = now
         self.rect.move_ip(-self.speed, 0)
         if self.rect.right < 0:
             self.kill()
 
              
 pygame.init()
+my_font = pygame.font.SysFont("times", 20)
 screen = pygame.display.set_mode((1280, 1024))
 player = Player()
 background = pygame.Surface(screen.get_size())
@@ -120,7 +136,6 @@ while running:
                     start_ticks = pygame.time.get_ticks()
                     break
         continue
-    
     seconds = (pygame.time.get_ticks()-start_ticks)/1000
     for event in pygame.event.get():
         if event.type == KEYDOWN:
@@ -148,8 +163,10 @@ while running:
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys)
     opponents.update()
-        
-        
+
+    if not lives == 0:    
+        timetext = my_font.render("Time = " + str(seconds), 1, (0, 0, 0))
+    screen.blit(timetext, (5, 10))
     for entity in all_sprites:
         screen.blit(entity.image, entity.rect)
 
