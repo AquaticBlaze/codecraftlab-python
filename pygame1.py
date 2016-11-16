@@ -1,6 +1,8 @@
 import pygame
 import random
 import time
+import urllib2,json
+from pprint import pprint
 from pygame.locals import *
 
 class Player(pygame.sprite.Sprite):
@@ -95,7 +97,19 @@ class Hexagon(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
-             
+def getWeatherCondition(station_data):
+    cond = str(station_data[0]['station']['condition'])
+    return cond
+
+
+url = 'https://brevard.weatherstem.com/api'
+indata = {'api_key':'x023yuaj','stations':['pac']}
+request = urllib2.Request(url)
+request.add_header('Contest-Type','application/json')
+outdata = json.dumps(indata)
+response = urllib2.urlopen(request,outdata)
+station_data = json.load(response)
+print(getWeatherCondition(station_data))
 pygame.init()
 my_font = pygame.font.SysFont("times", 20)
 screen = pygame.display.set_mode((1280, 1024))
@@ -166,7 +180,9 @@ while running:
 
     if not lives == 0:    
         timetext = my_font.render("Time = " + str(seconds), 1, (0, 0, 0))
+        lifetext = my_font.render("Lives = " + str(lives), 1, (0, 0, 0))
     screen.blit(timetext, (5, 10))
+    screen.blit(lifetext, (5, 30))
     for entity in all_sprites:
         screen.blit(entity.image, entity.rect)
 
