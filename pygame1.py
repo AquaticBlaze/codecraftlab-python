@@ -87,8 +87,7 @@ class Hexagon(pygame.sprite.Sprite):
     def update(self):
         self.index += 1
         if self.index >= len(self.images):
-            self.index = 0
-        now = pygame.time.get_ticks()
+            now = pygame.time.get_ticks()
         if now - self.last >= self.cooldown:
             self.image = self.images[self.index]
             self.image.set_colorkey((255, 255, 255), RLEACCEL)
@@ -96,6 +95,12 @@ class Hexagon(pygame.sprite.Sprite):
         self.rect.move_ip(-self.speed, 0)
         if self.rect.right < 0:
             self.kill()
+            
+class Octogon(pygame.sprite.Sprite):
+    def __init__(self, color):
+        super(Cloud, self).__init__()
+        if color = (100, 19, 166)
+        
 
 def getWeatherCondition(station_data):
     cond = str(station_data[0]['station']['condition'])
