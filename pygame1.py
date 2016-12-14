@@ -69,7 +69,6 @@ class Pentagon(pygame.sprite.Sprite):
         self.rect.move_ip(-self.speed, 0)
         if self.rect.right < 0:
             self.kill()
-
 class Hexagon(pygame.sprite.Sprite):
     def __init__(self):
         super(Hexagon, self).__init__()
@@ -86,35 +85,42 @@ class Hexagon(pygame.sprite.Sprite):
         self.cooldown = 1000
     def update(self):
         self.index += 1
-        if self.index >= len(self.images):
-            now = pygame.time.get_ticks()
-        if now - self.last >= self.cooldown:
-            self.image = self.images[self.index]
-            self.image.set_colorkey((255, 255, 255), RLEACCEL)
-            self.last = now
+        if self.index % 5 == 0:
+            if self.image == 'Hexagon.png':
+                self.image = self.images[1]
+                self.image.set_colorkey((255, 255, 255), RLEACCEL)
+                #self.last = now
+            else:
+                self.image == self.images[0]
+                self.image.set_colorkey((255, 255, 255), RLEACCEL)
+                #self.last = now
         self.rect.move_ip(-self.speed, 0)
         if self.rect.right < 0:
             self.kill()
+
             
-class Octogon(pygame.sprite.Sprite):
-    def __init__(self, color):
-        super(Cloud, self).__init__()
-        if color = (100, 19, 166)
+#class Octogon(pygame.sprite.Sprite):
+    #def __init__(self, color):
+        #super(Cloud, self).__init__()
+        #if color = (100, 19, 166)
         
 
-def getWeatherCondition(station_data):
-    cond = str(station_data[0]['station']['condition'])
-    return cond
+#def getWeatherCondition(station_data):
+    #cond = str(station_data[0]['station']['condition'])
+    #return cond
 
 
-url = 'https://brevard.weatherstem.com/api'
-indata = {'api_key':'x023yuaj','stations':['pac']}
-request = urllib2.Request(url)
-request.add_header('Contest-Type','application/json')
-outdata = json.dumps(indata)
-response = urllib2.urlopen(request,outdata)
-station_data = json.load(response)
-print(getWeatherCondition(station_data))
+#url = 'https://brevard.weatherstem.com/api'
+#indata = {'api_key':'x023yuaj','stations':['pac']}
+#request = urllib2.Request(url)
+#request.add_header('Contest-Type','application/json')
+#outdata = json.dumps(indata)
+#response = urllib2.urlopen(request,outdata)
+#station_data = json.load(response)
+#print(getWeatherCondition(station_data))
+myfile = open("C:\Users\Student\Desktop\MyFile.txt", "r")
+highscore = myfile.readline()
+print('The current high score is ' + highscore + ' seconds')
 pygame.init()
 my_font = pygame.font.SysFont("times", 20)
 screen = pygame.display.set_mode((1280, 1024))
@@ -199,8 +205,13 @@ while running:
             playerkill = True
             player.kill()
             print ('You survived ' + str(seconds) + ' seconds!')
+            if seconds > int(highscore):
+                myfile = open("C:\Users\Student\Desktop\MyFile.txt", "w")
+                myfile.write (str(seconds))
+                print('The current high score is now ' + str(seconds) + ' seconds')
+                myfile.close 
     pygame.display.flip()
-
-
+    
 pygame.quit()
 
+ 
