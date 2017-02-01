@@ -1,7 +1,7 @@
 import pygame
 from pygame import *
 
-WIN_WIDTH = 800
+WIN_WIDTH = 1000
 WIN_HEIGHT = 640
 HALF_WIDTH = int(WIN_WIDTH / 2)
 HALF_HEIGHT = int(WIN_HEIGHT / 2)
@@ -15,90 +15,46 @@ def main():
     global cameraX, cameraY
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY, FLAGS, DEPTH)
-    pygame.display.set_caption("Use arrows to move!")
+    pygame.display.set_caption("Platformer")
     timer = pygame.time.Clock()
 
     up = down = left = right = running = False
     bg = Surface((32,32))
     bg.convert()
-    bg.fill(Color("#000000"))
+    bg.fill(Color(0, 183, 198))
     entities = pygame.sprite.Group()
     player = Player(32, 32)
     platforms = []
-
+    run = True
+    
     x = y = 0
     level = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P   E                                      P",
-        "P  PPPP                                    P",
-        "P                                          P",
-        "P           P                              P",
-        "P                         P                P",
-        "P                                          P",
-        "P                                  PPP     P",
-        "P                       P                  P",
-        "P           PPP                            P",
-        "P                                          P",
-        "P P                                        P",
-        "P                                          P",
-        "P         P            P                   P",
-        "P                          P               P",
-        "P                                          P",
-        "P                                    P     P",
-        "P                                 P        P",
-        "P                            P             P",
-        "P               P       P                  P",
-        "P                                          P",
-        "P  PPPPPPPP                                P",
-        "P                                          P",
-        "P                                          P",
-        "P             P                            P",
-        "P                                          P",
-        "P                                          P",
-        "P                     PPPPPPPPP            P",
-        "P                                          P",
-        "P                                          P",
-        "PPPPPPPPPP                                 P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P                    PPPPPPPPPPP           P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P    PPPPPPPP                              P",
-        "P                                          P",
-        "P                          PPPPPPP         P",
-        "P                 PPPPPP                   P",
-        "P                                          P",
-        "P         PPPPPPP                          P",
-        "P                                          P",
-        "P                     PPPPPP               P",
-        "P                                          P",
-        "P   PPPPPPPPPPP                            P",
-        "P                                          P",
-        "P                 PPPPPPPPPPP              P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "P                                          P",
-        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",]
-    # build the level
+        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+        "P                                                                                                                                                              P",
+        "P                                                                                                                                                              P",
+        "P                     PPPPPPPPP                                                                                                                                P",
+        "P                                    PPP                                                                                                                       P",
+        "P                                    PPP                                                                                                                       P",
+        "P                                    PPP                                                                                                                       P",
+        "P                                    PPP     PPPP                                                                              `                               P",
+        "P    PPPPPPPP                        PPP                                                                                                                       P",
+        "P                                    PPP                                                                                                                       P",
+        "P                          PPPPPPP   PPP                                                                                                                       P",
+        "P                 PPPPPP             PPP                                                                                                                       P",
+        "P                                    PPP                                                                                                                       P",
+        "P         PPPPPPP                    PPP                      PPPP                                                                                             P",
+        "P                                    PPP                                                                                                                       P",
+        "P                     PPPPPP         PPP                            PPPPPPPPPP            PPPPPPPPPP                                                           P",
+        "P                                    PPP                            PPPPPPPPPP            PPPPPPPPPP                   P                         P               P",
+        "P   PPPPPPPPPPP                      PPP                            PPPPPPPPPP            PPPPPPPPPP                   PLLLLLLLLP   PLLLLLLLLLPPPP                                        P",
+        "P                                    PPP                            PPPPPPPPPPLLLLLLLLLLLLPPPPPPPPPP                   PLLLLLLLLP   PLLLLLLLLLLLLP                                        P",
+        "P                 PPPPPPPPPPP        PPP                            PPPPPPPPPPLLLLLLLLLLLLPPPPPPPPPP       PPPP        PLLLLLLLLP   PLLLLLLLLLLLLP                                        P",
+        "P                                    PPP                            PPPPPPPPPPLLLLLLLLLLLLPPPPPPPPPP                   PLLLLLLLLPPPPPLLLLLLLLLLLLP                                        P",
+        "P                                    PPP                            PPPPPPPPPPLLLLLLLLLLLLPPPPPPPPPP                   PLLLLLLLLLLLLLLLLLLLLLLLLLP                                        P",
+        "P                                    PPP                            PPPPPPPPPPLLLLLLLLLLLLPPPPPPPPPP                   PLLLLLLLLLLLLLLLLLLLLLLLLLP                                        P",
+        "P                                    PPP                            PPPPPPPPPPLLLLLLLLLLLLPPPPPPPPPP                   PLLLLLLLLLLLLLLLLLLLLLLLLLP                                        P",
+        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPLLLLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPPPPLLLLLLLLLLLLPPPPPPPPPPLLLLLLLLLLLLLLLLLLLPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"]
+        
     for row in level:
         for col in row:
             if col == "P":
@@ -109,22 +65,27 @@ def main():
                 e = ExitBlock(x, y)
                 platforms.append(e)
                 entities.add(e)
+            if col == "L":
+                l = Lava(x, y)
+                platforms.append(l)
+                entities.add(l)
             x += 32
         y += 32
         x = 0
 
-    total_level_width  = len(level[0])*32
+    total_level_width  = len(level[0])*100
     total_level_height = len(level)*32
     camera = Camera(complex_camera, total_level_width, total_level_height)
     entities.add(player)
 
-    while 1:
+    while run:
         timer.tick(60)
 
         for e in pygame.event.get():
-            if e.type == QUIT: raise SystemExit, "QUIT"
+            if e.type == QUIT:
+                run = False
             if e.type == KEYDOWN and e.key == K_ESCAPE:
-                raise SystemExit, "ESCAPE"
+                run = False
             if e.type == KEYDOWN and e.key == K_UP:
                 up = True
             if e.type == KEYDOWN and e.key == K_DOWN:
@@ -135,7 +96,7 @@ def main():
                 right = True
             if e.type == KEYDOWN and e.key == K_SPACE:
                 running = True
-
+                
             if e.type == KEYUP and e.key == K_UP:
                 up = False
             if e.type == KEYUP and e.key == K_DOWN:
@@ -144,21 +105,22 @@ def main():
                 right = False
             if e.type == KEYUP and e.key == K_LEFT:
                 left = False
+            
+                
 
-        # draw background
         for y in range(32):
             for x in range(32):
                 screen.blit(bg, (x * 32, y * 32))
 
         camera.update(player)
 
-        # update player, draw everything else
         player.update(up, down, left, right, running, platforms)
         for e in entities:
             screen.blit(e.image, camera.apply(e))
 
         pygame.display.update()
 
+    pygame.quit()
 class Camera(object):
     def __init__(self, camera_func, width, height):
         self.camera_func = camera_func
@@ -180,10 +142,10 @@ def complex_camera(camera, target_rect):
     _, _, w, h = camera
     l, t, _, _ = -l+HALF_WIDTH, -t+HALF_HEIGHT, w, h
 
-    l = min(0, l)                           # stop scrolling at the left edge
-    l = max(-(camera.width-WIN_WIDTH), l)   # stop scrolling at the right edge
-    t = max(-(camera.height-WIN_HEIGHT), t) # stop scrolling at the bottom
-    t = min(0, t)                           # stop scrolling at the top
+    l = min(0, l)
+    l = max(-(camera.width-WIN_WIDTH), l)   
+    t = max(-(camera.height-WIN_HEIGHT), t) 
+    t = min(0, t)                           
     return Rect(l, t, w, h)
 
 class Entity(pygame.sprite.Sprite):
@@ -202,8 +164,9 @@ class Player(Entity):
         self.rect = Rect(x, y, 32, 32)
 
     def update(self, up, down, left, right, running, platforms):
+            
         if up:
-            # only jump if on the ground
+            
             if self.onGround: self.yvel -= 10
         if down:
             pass
@@ -214,21 +177,21 @@ class Player(Entity):
         if right:
             self.xvel = 8
         if not self.onGround:
-            # only accelerate with gravity if in the air
+ 
             self.yvel += 0.3
-            # max falling speed
+
             if self.yvel > 100: self.yvel = 100
         if not(left or right):
             self.xvel = 0
-        # increment in x direction
+       
         self.rect.left += self.xvel
-        # do x-axis collisions
+       
         self.collide(self.xvel, 0, platforms)
-        # increment in y direction
+       
         self.rect.top += self.yvel
-        # assuming we're in the air
+        
         self.onGround = False;
-        # do y-axis collisions
+        
         self.collide(0, self.yvel, platforms)
 
     def collide(self, xvel, yvel, platforms):
@@ -236,12 +199,13 @@ class Player(Entity):
             if pygame.sprite.collide_rect(self, p):
                 if isinstance(p, ExitBlock):
                     pygame.event.post(pygame.event.Event(QUIT))
+                if isinstance(p, Lava):
+                    self.kill()
+                    pygame.event.post(pygame.event.Event(QUIT))
                 if xvel > 0:
                     self.rect.right = p.rect.left
-                    print "collide right"
                 if xvel < 0:
                     self.rect.left = p.rect.right
-                    print "collide left"
                 if yvel > 0:
                     self.rect.bottom = p.rect.top
                     self.onGround = True
@@ -255,7 +219,7 @@ class Platform(Entity):
         Entity.__init__(self)
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color("#DDDDDD"))
+        self.image.fill(Color(0, 128, 0))
         self.rect = Rect(x, y, 32, 32)
 
     def update(self):
@@ -264,7 +228,17 @@ class Platform(Entity):
 class ExitBlock(Platform):
     def __init__(self, x, y):
         Platform.__init__(self, x, y)
-        self.image.fill(Color("#0033FF"))
+        self.image.fill(Color(255, 255, 0))
+
+class Lava(Entity):
+    def __init__(self, x, y):
+        Entity.__init__(self)
+        self.image = Surface((32, 32))
+        self.image.convert()
+        self.image.fill(Color(128, 0, 0))
+        self.rect = Rect(x, y, 32, 32)    
+
+
 
 if __name__ == "__main__":
     main()
