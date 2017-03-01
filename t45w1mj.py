@@ -1251,7 +1251,7 @@ PBuijeoTSpsVLaOGuLVjMZXkBvVXwUuHfBihziiavGSYofPNeKsTXruMUumRRPQJzvSzJkKbtSipiqBd
 
 for i in text:
     search = text[i, i + 1]
-    if ord(search[1]) >= 101 and >= 132:
+    if ord(search[1]) >= 101 and <= 132:
         if ord(search[2]) >= 101 and <= 132:
             if ord(search[2]) >= 101 and <= 132:
                 if ord(search[4]) >= 141 and <= 172:
