@@ -3,6 +3,7 @@ from pygame import *
 pygame.init()
 
 screen = pygame.display.set_mode((750, 540))
+background = pygame.Surface(screen.get_size())
 background.fill((0, 0, 0))
 
 run = True
