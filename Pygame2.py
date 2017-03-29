@@ -1,6 +1,8 @@
+#import pygame
 import pygame
 from pygame import *
 
+#create window
 WIN_WIDTH = 1000
 WIN_HEIGHT = 640
 HALF_WIDTH = int(WIN_WIDTH / 2)
@@ -11,6 +13,7 @@ DEPTH = 32
 FLAGS = 0
 CAMERA_SLACK = 30
 
+# main loop
 def main():
     global cameraX, cameraY
     pygame.init()
@@ -26,13 +29,14 @@ def main():
     player = Player(32, 32)
     platforms = []
     run = True
-    
+
+    #create level
     x = y = 0
     level = [
         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPXXPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPXPPPPPPP",
         "P                                                                                                                                                              PPPPPPPP                 BG                PP                                                                                                                                                                  N                                                                                                      LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL                             NPPPPPPPPPPPPPP                                           P                               PP                                                                                         P",
         "P                                                                                                                                                              PPPPPPPP                 BG                PP                                                                                         L                                                                        N                                                                                                       LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL                              NPPPPPPPPPPPPPP                                           P                               PP                                                                                        EP",
-        "P                                                                                                                                                              PPPPPPPP                 BG                PP                                                                                                                                                                  N                                                      LL                                                LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL    L                          NPPPPPPPPPPPPPP      PPPPPPPPPPPPPPPPPPPPPPP     PPPPPPPPPP         PPPPPPPPPPPPPPPPPPPP  PP     PPPPPPPPPPPXPPPPPPPPPPPPXXPPPPPPPPPPPPPPPXPPPPPPPPPPPXPPPPPPPPPPXXXPPPPPPPPPPPPPPPPPP",
+        "P                                                                                                                                                              PPPPPPPP                 BG                PP                                                                                                                                                                  N                                                      LL                                                LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL    L                          NPPPPPPPPPPPPPP      PPPPPPPPPPPPPPPPPPPPPPP     PPPPPPPPPP         PPPPPPPPPPPPPPPPPPPP  PP     PPPPPPPPPPPXPPPPPPPPPPPPPPPPPPPPPPPPPPPPPXPPPPPPPPPPPXPPPPPPPPPPXXXPPPPPPPPPPPPPPPPPP",
         "P                                    PPP                                                                                                                       PPPPPPPP                 BG                PP                                                                                                                                                                  N                                                      LL                                     LL          LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL                  L             N                                 P                       P                            P  PP                   P                                                        N           P",
         "P                                    PPP                                                                                                                       PPPPPPPP          PPGGGGGBG                PP                                                                                                              L                               L                   N                                                                                             LL           LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL                                 N                                 P                       P                            P  PP                   P                                                        N           P",
         "P                                    PPP     PPPP                                                                              `                               PPPPPPPP          PP    GBG                PP                                                                                                                                                                  N                                                                                LL                         LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL                                  N                                 P                       PPP                          P  PPP                  P   PPP                                                  N           P",
@@ -42,8 +46,8 @@ def main():
         "P                                    PPP                                                                                                                       PPPPPPPP          PPBGGGGGG       G        PP                                                                                          L                                                                       N                                                                                              LL                                      LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL             L                        N                                 P                       P                PP          P  PPP                  P   P                          PPP                       N           P",
         "P                                    PPP                                                                                                                       PPPPPPPP          PPBGGGBBB       G        PP                                                                                                                                                                  N                                                             LL                               LL                                       LLLLLLLLLLLLLLLL         LLLLLLLLLLLLLLL                                       N        PP                       P                       P                            P  PP          P        P   P     X               X                              N N         P",
         "P                                    PPP                      PPPP                                                                                             PPPPPPP           PPBBBBBGG       G        PP                   BBB                                                                                            L                                               N                                                             LL                                                                         LLLLLLLLLLLLLL           LLLLLLLLLLLLL                            L           N                                 P           L           P                         PP P  PX          X            P                X              P                    N N         P",
-        "P         PPPPPPP                    PPP                                                                                                                       PPPPPPPP          PPGGGGGG        G        PP                  BB BB       G                                                                                                                                   N                                                                                                                                         LLLLLLLLLLLL             LLLLLLLLLLL                                         N                   PP            P                       P              XX            P  PP          P            X                               X                      N         P",
-        "P                                    PPP                            PPPPPPPPPP            PPPPPPPPPP                                                           PPPPPPPP          PP              G        PP                 BB   BB      G                                                                                                                                   N                                                                                                              LLLLLLLLLLLLLLLLLLLL        LLLLLLLLLL               LLLLLLLLL                                          N                                 P                       P                            P  PPPPPXXXPPPFPFPPPPPPPPPPPPFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFPPPPPPPXPPPPPPPPPPPPPPPPPPPP      P",  
+        "P         PPPPPPP                    PPP                                                                                                                       PPPPPPPP          PPGGGGGG        G        PP                  BB BB       G                                                                                                                                   N                                                                                                                                         LLLLLLLLLLLL             LLLLLLLLLLL                                         N                   PP            P                       P              XX            P  PP          X            X                               X                      N         P",
+        "P                                    PPP                            PPPPPPPPPP            PPPPPPPPPP                                                           PPPPPPPP          PP              G        PP                 BB   BB      G                                                                                                                                   N                                                                                                              LLLLLLLLLLLLLLLLLLLL        LLLLLLLLLL               LLLLLLLLL                                          N                                 P                       P                            P  PPPPPXXXPPPXPPPPPPPPPPPPPPFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFPPPPPPPXPPPPPPPPPPPPPPPPPPPP      P",  
         "P                                    PPP                            PPPPPPPPPP            PPPPPPPPPP                   P                                       PPPPPPPP          PP              G        PP           BBB  BB     BB  BBBG                                                                       L                                    L                      N                                                                                                             LLLLLLLLLLLLLLLLLLLLLL                                                                                   N                              PP P   L                   P                            P  PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP    P",  
         "P                                    PPP                            PPPPPPPPPP            PPPPPPPPPP                   PLLLLLLLLP   PLLLLLLLLLPPPPLLLLLLLL    LLLLLLLLP          PP           BBBG        PP       BBBBB BBBB       BBBB  G                                                                                                                                   N                                                                          LL                                LLLLLLLLLLLLLLLLLLLLLLLL                      LLL                                                         N                                 P                       P    XX               PP     P  P                                  P                                                      P",
         "P                                    PPP                            PPPPPPPPPPLLLLLLLLLLLLPPPPPPPPPP                   PLLLLLLLLP   PLLLLLLLLLLLLPLLLLLLLL    LLLLLLLLP           P           GGGG        PPGGGGGGGGGGG   GGGGGGGGGGGG    G                                                                                                                                   N                                                                          LL                               LLLLLLLLLLLLLLLLLLLLLLLLLL                    LLLLL                                L                       N                                 P                       P                            P  P                                  P                                                      P",
@@ -52,8 +56,9 @@ def main():
         "P                                    PPP                            PPPPPPPPPPLLLLLLLLLLLLPPPPPPPPPP                   PLLLLLLLLLLLLLLLLLLLLLLLLLPLLLL LLLLLLLLLLLLLLLP          PP     GGG               PP         GG   GG         GG                                                                   L                                                                   N                   P      P       PP               LL                                       LL          LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL      L                      L           N                                 P                       P                            P  P             P       PPPPPP                                                              P",
         "P                                    PPP                            PPPPPPPPPPLLLLLLLLLLLLPPPPPPPPPP                   PLLLLLLLLLLLLLLLLLLLLLLLLLPLLLL LLLLLLLLLLLLLLLP          PP                       PP            G               GG                                                                                                                                  N N             P     P      P       PP               LL                                       LL         LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL                                      N N          PP                     P    L                                               P                P       PPPPPP                                                              P",
         "P                                    PPP                            PPPPPPPPPPLLLLLLLLLLLLPPPPPPPPPP                   PLLLLLLLLLLLLLLLLLLLLLLLLLPLLLL                           PP          GGGG                 PPPGGGGGGGGLLLLLLLGGGGGG                                                                                                                                  N          P    P     P      P       PP                                                                  LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL                                     N                                   P                                                    P                P       PPPPPP                                                              P",
-        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPLLLLLLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPPLLLLLLLLLLLLPPPPPPPPPPLLLLLLLLLLLLLLLLLLLPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPLLLLLLLLLLLLLLLLLLLLPPPPPPPPPPPPPP                     PPPPPPPPPPPPPPPPPPFFFFPPPPPPPPPPPLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPPPPLLLLPLLLLLPLLLLLLPLLLLLLLPLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPLLLLLLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPXPPPPPPPPXXPPPPPPPPPPPPPPPPPPPPPPPLLLLLLLPPPPPPPPPPPPPPPPPPPPPPPPPPXXXXXXXXXXXXXXXPPPPPPPPPPPPPPPPPPPPPPPPPPPP"]
-        
+        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPLLLLLLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPPLLLLLLLLLLLLPPPPPPPPPPLLLLLLLLLLLLLLLLLLLPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPLLLLLLLLLLLLLLLLLLLLPPPPPPPPPPPPPP                     PPPPPPPPPPPPPPPPPPFFFFPPPPPPPPPPPLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPPPPLLLLPLLLLLPLLLLLLPLLLLLLLPPLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPLLLLLLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPXPPPPPPPPXXPPPPPPPPPPPPPPPPPPPPPPPLLLLLLLPPPPPPPPPPPPPPPPPPPPPPPPPPXXXXXXXXXXXXXXXPPPPPPPPPPPPPPPPPPPPPPPPPPPP"]
+
+    #create blocks    
     for row in level:
         for col in row:
             if col == "P":
@@ -92,12 +97,13 @@ def main():
         y += 32
         x = 0
 
-
+    #set level size
     total_level_width  = len(level[0])*100
     total_level_height = len(level)*32
     camera = Camera(complex_camera, total_level_width, total_level_height)
     entities.add(player)
 
+    #detect keys
     while run:
         timer.tick(60)
 
@@ -142,6 +148,8 @@ def main():
         pygame.display.update()
 
     pygame.quit()
+
+#define camera
 class Camera(object):
     def __init__(self, camera_func, width, height):
         self.camera_func = camera_func
@@ -169,6 +177,7 @@ def complex_camera(camera, target_rect):
     t = min(0, t)                           
     return Rect(l, t, w, h)
 
+#define entities
 class Entity(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -186,6 +195,7 @@ class Player(Entity):
         self.image.convert()
         self.rect = Rect(x, y, 32, 32)
 
+    #create gravity and movement
     def update(self, up, down, left, right, running, platforms):
         if self.mode == 0:    
             if up:
@@ -239,6 +249,7 @@ class Player(Entity):
         
         self.collide(0, self.yvel, platforms)
 
+    #detect collisions
     def collide(self, xvel, yvel, platforms):
         for p in platforms:
             if pygame.sprite.collide_rect(self, p):
@@ -267,7 +278,7 @@ class Player(Entity):
                     self.rect.top = p.rect.bottom
             
 
-
+#define blocks
 class Platform(Entity):
     def __init__(self, x, y):
         Entity.__init__(self)
@@ -282,7 +293,7 @@ class Platform(Entity):
 class ExitBlock(Platform):
     def __init__(self, x, y):
         Platform.__init__(self, x, y)
-        self.image.fill(Color(255, 255, 0))
+        self.image.fill(Color(255 ,255 , 255))
 
 class Lava(Entity):
     def __init__(self, x, y):
@@ -316,7 +327,7 @@ class Flyportal(Entity):
         Entity.__init__(self)
         self.image = Surface((32, 32))
         self.image.convert()
-        self.image.fill(Color(254, 255, 0))
+        self.image.fill(Color(255, 255, 0))
         self.rect = Rect(x, y, 32, 32)
 
 class Normalportal(Entity):
@@ -334,6 +345,7 @@ class Poison(Entity):
         self.image.convert()
         self.image.fill(Color(62, 132, 60))
         self.rect = Rect(x, y, 32, 32)
-        
+
+#run program        
 if __name__ == "__main__":
     main()
