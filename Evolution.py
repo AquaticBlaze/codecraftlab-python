@@ -16,7 +16,7 @@ c = 0
 r = 0
 t = 0
 while tr < 1225:
-    screen.blit(land.surf, (1 + r, 1 - c))
+    screen.blit(land.surf, (1 + r, 1 + c))
     pygame.display.flip()
     tr = tr + 1
     r = r + 20
